@@ -47,15 +47,15 @@ def compute_gex_by_strike(ticker, spot, data, gex_oi, gex_volume, timestamp):
     )
     if ticker == "_SPX":
         ticker = "SPX"
-        bottom = gex_oi_by_strike.loc[limit_criteria].index.min() - 40
-        step = 20 # points
-        top = gex_oi_by_strike.loc[limit_criteria].index.max() + 40
+        bottom = gex_oi_by_strike.loc[limit_criteria].index.min() - 50
+        step = 25 # points
+        top = gex_oi_by_strike.loc[limit_criteria].index.max() + 50
 
-        bottom = round(bottom / 20) * 20
-        top = round(top / 20) * 20
+        bottom = round(bottom / 25) * 25
+        top = round(top / 25) * 25
 
-        xticks = np.arange(bottom, top, 20)
-        plt.tick_params(labelsize=7)
+        xticks = np.arange(bottom, top, 25)
+        plt.tick_params(labelsize=6.5)
 
     else:
         bottom = gex_oi_by_strike.loc[limit_criteria].index.min()
