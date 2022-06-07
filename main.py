@@ -13,6 +13,7 @@ import os
 
 TOKEN = os.environ.get("DISCORD_TOKEN")
 fsociety_channel_id = os.environ.get("FSOCIETY_LIVEGEX_ID")
+print("channel id: ", fsociety_channel_id)
 channel_ids = {
     "fsociety_livegex_id" : fsociety_channel_id
 }
@@ -34,6 +35,7 @@ async def on_ready():
     print("logged in")
     fsociety_channel = bot.get_channel(channel_ids["fsociety_livegex_id"])
     print(f"detected channel: {fsociety_channel}")
+    print(f"detected bot token: {TOKEN}")
 
 async def emit_gamma():
     await bot.wait_until_ready()
