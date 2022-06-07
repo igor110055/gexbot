@@ -30,12 +30,10 @@ bot = discord.Client()
 @bot.event
 async def on_ready():
     print("logged in")
-    fsociety_channel = bot.get_channel(int(fsociety_channel_id))
-    print(f"detected channel: {fsociety_channel}")
-    print(f"detected bot token: {TOKEN}")
 
 async def emit_gamma():
     await bot.wait_until_ready()
+    fsociety_channel = bot.get_channel(int(fsociety_channel_id))
     with open('img/SPX_gex_by_strike.png', 'rb') as f:
         picture = discord.File(f)
         await fsociety_channel.send(file=picture)
