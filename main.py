@@ -26,7 +26,7 @@ def draw_graphs(spot, option_data, timestamp):
 
 bot = discord.Client()
 scheduler = AsyncIOScheduler()
-scheduler.add_job(draw_graphs, CronTrigger(minute="10"))
+scheduler.add_job(draw_graphs, CronTrigger(day_of_week="mon-fri", minute="10"))
 scheduler.start()
 
 async def func():
