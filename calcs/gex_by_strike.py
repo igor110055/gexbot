@@ -8,7 +8,7 @@ for param in ["figure.facecolor", "axes.facecolor", "savefig.facecolor"]:
 for param in ["text.color", "axes.labelcolor", "xtick.color", "ytick.color"]:
     plt.rcParams[param] = "0.9"
 
-def compute_gex_by_strike(ticker, spot, data, gex_oi, gex_volume):
+def compute_gex_by_strike(ticker, spot, data, gex_oi, gex_volume, timestamp):
     """Compute and plot GEX by strike"""
     # Compute total GEX by strike
     gex_oi_by_strike = data.groupby("strike")["GEX_oi"].sum() / 10 ** 9
@@ -18,10 +18,10 @@ def compute_gex_by_strike(ticker, spot, data, gex_oi, gex_volume):
     limit_criteria = (gex_oi_by_strike.index > spot * 0.75) & (gex_oi_by_strike.index < spot * 1.25)
     limit_criteria = (gex_vol_by_strike.index > spot * 0.75) & (gex_vol_by_strike.index < spot * 1.25)
 
-    fig = plt.figure(figsize=(8.0, 6.0))
+    fig = plt.figure(figsize=(12.0, 7.0))
     if ticker == '_SPX':
-        width_oi = 8
-        width_vol = 5
+        width_oi = 4
+        width_vol = 3
     else:
         width_oi = 1
         width_vol = 0.8
@@ -44,15 +44,15 @@ def compute_gex_by_strike(ticker, spot, data, gex_oi, gex_volume):
     )
     if ticker == "_SPX":
         ticker = "SPX"
-        bottom = gex_oi_by_strike.loc[limit_criteria].index.min()
-        step = 50 # points
-        top = gex_oi_by_strike.loc[limit_criteria].index.max()
+        bottom = gex_oi_by_strike.loc[limit_criteria].index.min() - 40
+        step = 20 # points
+        top = gex_oi_by_strike.loc[limit_criteria].index.max() + 40
 
-        bottom = round(bottom / 50) * 50
-        top = round(top / 50) * 50
+        bottom = round(bottom / 20) * 20
+        top = round(top / 20) * 20
 
-        xticks = np.arange(bottom, top, 50)
-        plt.tick_params(labelsize=8)
+        xticks = np.arange(bottom, top, 20)
+        plt.tick_params(labelsize=7)
 
     else:
         bottom = gex_oi_by_strike.loc[limit_criteria].index.min()
@@ -63,17 +63,20 @@ def compute_gex_by_strike(ticker, spot, data, gex_oi, gex_volume):
         top = round(top / 5) * 5
 
         xticks = np.arange(bottom, top, 5)
-        plt.tick_params(labelsize=8)
+        plt.tick_params(labelsize=5)
         
 
     plt.grid(color="#2A3459")
     plt.xticks(fontweight="heavy")
     plt.xticks(xticks)
-    plt.xticks(rotation=45)
+    plt.xticks(rotation=65)
     plt.yticks(fontweight="heavy")
     plt.xlabel("Strike", fontweight="heavy")
     plt.ylabel("Gamma Exposure (Bn$ / %)", fontweight="heavy")
     plt.title(f"{ticker} GEX by Strike", fontweight="heavy")
     plt.legend()
-    plt.figtext(0.15, 0.8, f"GEX Notional by OI: ${gex_oi} Bn\nGEX Notional by Volume: ${gex_volume} Bn")
-    plt.savefig(f"img/{ticker}_gex_by_strike.png", bbox_inches='tight', dpi=150)
+    plt.figtext(
+        0.15,
+        0.8,
+        f"GEX Notional by OI: ${gex_oi} Bn\nGEX Notional by Volume: ${gex_volume} Bn\nUpdated as of {timestamp.month}/{timestamp.day} {timestamp.hour}:{timestamp.minute}:{timestamp.second} EST")
+    plt.savefig(f"img/{ticker}_gex_by_strike.png", bbox_inches='tight', dpi=800)

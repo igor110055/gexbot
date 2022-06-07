@@ -11,10 +11,11 @@ def scrape_data(ticker):
     )
     data = pd.DataFrame.from_dict(data.json())
     spot_price = data.loc["current_price", "data"]
+    timestamp = pd.to_datetime(data["timestamp"].iloc[0]).tz_localize('UTC').tz_convert("US/Eastern")
     option_data = pd.DataFrame(data.loc["options", "data"])
     df = fix_option_data(option_data)
 
-    return spot_price, df
+    return spot_price, df, timestamp
 
 def fix_option_data(data):
     """

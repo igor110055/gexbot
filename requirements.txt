@@ -1,5 +1,6 @@
 alabaster==0.7.8
 appdirs==1.4.3
+APScheduler==3.9.1
 apturl==0.5.2
 astroid==2.3.3
 attrs==19.3.0
@@ -98,9 +99,11 @@ pyrsistent==0.15.5
 PySocks==1.6.8
 pysvn==1.9.9
 python-apt==2.0.0+ubuntu0.20.4.7
+python-crontab==2.6.0
 python-dateutil==2.7.3
 python-debian===0.1.36ubuntu1
 pytz==2019.3
+pytz-deprecation-shim==0.1.0.post0
 pyxattr==0.6.1
 pyxdg==0.26
 PyYAML==5.3.1
@@ -128,6 +131,8 @@ testpath==0.4.4
 torbrowser-launcher==0.3.2
 tornado==5.1.1
 traitlets==4.3.3
+tzdata==2022.1
+tzlocal==4.2
 ubuntu-advantage-tools==27.7
 ubuntu-drivers-common==0.0.0
 ufw==0.36
