@@ -1,4 +1,7 @@
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+
 import numpy as np
 
 # Set plot style
@@ -80,3 +83,4 @@ def compute_gex_by_strike(ticker, spot, data, gex_oi, gex_volume, timestamp):
         0.8,
         f"GEX Notional by OI: ${gex_oi} Bn\nGEX Notional by Volume: ${gex_volume} Bn\nUpdated as of {timestamp.month}/{timestamp.day} {timestamp.hour}:{timestamp.minute}:{timestamp.second} EST")
     plt.savefig(f"img/{ticker}_gex_by_strike.png", bbox_inches='tight', dpi=800)
+    plt.close(fig)
