@@ -17,7 +17,7 @@ TOKEN = os.environ.get("DISCORD_TOKEN")
 async def on_ready():
     print(f"Logged in as {bot.user.name}({bot.user.id})")
 
-@bot.command()
+@bot.command(name="test")
 async def ping(ctx):
     await ctx.send("pong")
 
