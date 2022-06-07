@@ -72,7 +72,7 @@ def compute_gex_by_strike(ticker, spot, data, gex_oi, gex_volume, timestamp):
     plt.grid(color="#2A3459")
     plt.xticks(fontweight="heavy")
     plt.xticks(xticks)
-    plt.xticks(rotation=90)
+    plt.xticks(rotation=75)
     plt.yticks(fontweight="heavy")
     plt.xlabel("Strike", fontweight="heavy")
     plt.ylabel("Gamma Exposure (Bn$ / %)", fontweight="heavy")
