@@ -56,5 +56,6 @@ scheduler.add_job(emit_gamma, trigger=CronTrigger(day_of_week="mon-fri", second=
 
 if __name__ == "__main__":
     scheduler.start()
+    print('token:', NOPE_TOKEN)
     bot.run(NOPE_TOKEN)
     # draw_graphs()
