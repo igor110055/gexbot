@@ -11,21 +11,19 @@ for param in ["figure.facecolor", "axes.facecolor", "savefig.facecolor"]:
 for param in ["text.color", "axes.labelcolor", "xtick.color", "ytick.color"]:
     plt.rcParams[param] = "0.9"
 
-
-
 def compute_gex_by_strike(ticker, spot, data, gex_oi, gex_volume, timestamp):
     """Compute and plot GEX by strike"""
     # Compute total GEX by strike
     gex_oi_by_strike = data.groupby("strike")["GEX_oi"].sum() / 10 ** 9
     gex_vol_by_strike = data.groupby("strike")["GEX_volume"].sum() / 10 ** 9
     low_gamma = data.loc[(data['strike'] >= spot - 20) & (data['strike'] <= spot + 20)].copy()
+    
     if ticker == '_SPX':
         low_gamma['mean_volume'] = low_gamma['GEX_volume'].rolling(10).mean()
         n = low_gamma.shape[0]
         mid = int(n / 2)
         flip_idx = np.where(np.diff(np.sign(low_gamma['mean_volume'].iloc[mid-10:mid+10])))[0]
         flip_strike = low_gamma['strike'].values[flip_idx[0]]
-
     if ticker == 'SPY':
         low_gamma = data.loc[(data['strike'] >= spot - 5) & (data['strike'] <= spot + 5)].copy()
         low_gamma['mean_volume'] = low_gamma['GEX_volume'].rolling(3).mean()
@@ -64,9 +62,9 @@ def compute_gex_by_strike(ticker, spot, data, gex_oi, gex_volume, timestamp):
     )
     if ticker == "_SPX":
         ticker = "SPX"
-        bottom = gex_oi_by_strike.loc[limit_criteria].index.min() - 50
+        bottom = gex_oi_by_strike.loc[limit_criteria].index.min()
         step = 25 # points
-        top = gex_oi_by_strike.loc[limit_criteria].index.max() + 50
+        top = gex_oi_by_strike.loc[limit_criteria].index.max()
 
         bottom = round(bottom / 25) * 25
         top = round(top / 25) * 25
