@@ -11,11 +11,28 @@ for param in ["figure.facecolor", "axes.facecolor", "savefig.facecolor"]:
 for param in ["text.color", "axes.labelcolor", "xtick.color", "ytick.color"]:
     plt.rcParams[param] = "0.9"
 
+
+
 def compute_gex_by_strike(ticker, spot, data, gex_oi, gex_volume, timestamp):
     """Compute and plot GEX by strike"""
     # Compute total GEX by strike
     gex_oi_by_strike = data.groupby("strike")["GEX_oi"].sum() / 10 ** 9
     gex_vol_by_strike = data.groupby("strike")["GEX_volume"].sum() / 10 ** 9
+    low_gamma = data.loc[(data['strike'] >= spot - 20) & (data['strike'] <= spot + 20)].copy()
+    if ticker == '_SPX':
+        low_gamma['mean_volume'] = low_gamma['GEX_volume'].rolling(10).mean()
+        n = low_gamma.shape[0]
+        mid = int(n / 2)
+        flip_idx = np.where(np.diff(np.sign(low_gamma['mean_volume'].iloc[mid-10:mid+10])))[0]
+        flip_strike = low_gamma['strike'].values[flip_idx[0]]
+
+    if ticker == 'SPY':
+        low_gamma = data.loc[(data['strike'] >= spot - 5) & (data['strike'] <= spot + 5)].copy()
+        low_gamma['mean_volume'] = low_gamma['GEX_volume'].rolling(3).mean()
+        n = low_gamma.shape[0]
+        mid = int(n / 2)
+        flip_idx = np.where(np.diff(np.sign(low_gamma['mean_volume'].iloc[mid-2:mid+2])))[0]
+        flip_strike_SPY = low_gamma['strike'].values[flip_idx[0]]
 
     # Limit data to +- 25% from spot price
     limit_criteria = (gex_oi_by_strike.index > spot * 0.75) & (gex_oi_by_strike.index < spot * 1.25)
@@ -69,18 +86,44 @@ def compute_gex_by_strike(ticker, spot, data, gex_oi, gex_volume, timestamp):
         plt.tick_params(labelsize=5)
         
 
-    plt.grid(color="#2A3459")
+    plt.grid(axis="x", color="#2A3459")
     plt.xticks(fontweight="heavy")
     plt.xticks(xticks)
-    plt.xticks(rotation=75)
+    plt.xticks(rotation=70)
+
+    ax = plt.gca()
+    for i,(g,tick) in enumerate(zip(xticks, ax.get_xticklabels())):
+        if ticker == 'SPX' and g <= flip_strike:
+            tick.set_ha('left')
+            tick.set_va('bottom')
+            tick.set_position((i, 0.05))
+        elif ticker == 'SPX' and g > flip_strike:
+            tick.set_ha('right')
+            tick.set_va('top')
+            tick.set_position((i, -0.05))
+        elif ticker == 'SPY' and g <= flip_strike_SPY:
+            tick.set_ha('left')
+            tick.set_va('bottom')
+            tick.set_position((i, 0.05))
+        elif ticker == 'SPY' and g > flip_strike_SPY:
+            tick.set_ha('right')
+            tick.set_va('top')
+            tick.set_position((i, -0.05))
+        tick.set_rotation_mode('anchor')
+        tick.set_transform(ax.transData)
+
+    for (i, axis) in enumerate(ax.get_xgridlines()):
+        if i % 2 == 0:
+            axis.set_color("#252e50")
+
     plt.yticks(fontweight="heavy")
-    plt.xlabel("Strike", fontweight="heavy")
+    plt.xlabel("Strike", fontweight="heavy", labelpad=8)
     plt.ylabel("Gamma Exposure (Bn$ / %)", fontweight="heavy")
     plt.title(f"{ticker} GEX by Strike", fontweight="heavy")
     plt.legend()
     plt.figtext(
         0.15,
         0.8,
-        f"GEX Notional by OI: ${gex_oi} Bn\nGEX Notional by Volume: ${gex_volume} Bn\nUpdated as of {timestamp.month}/{timestamp.day} {timestamp.hour}:{timestamp.minute}:{timestamp.second} EST")
+        f"Spot Price: ${spot}\nGEX Notional by OI: ${gex_oi} Bn\nGEX Notional by Volume: ${gex_volume} Bn\nUpdated as of {timestamp.month}/{timestamp.day} {timestamp.hour}:{timestamp.minute}:{timestamp.second} EST")
     plt.savefig(f"img/{ticker}_gex_by_strike.png", bbox_inches='tight', dpi=800)
     plt.close(fig)
