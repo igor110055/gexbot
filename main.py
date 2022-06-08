@@ -11,6 +11,8 @@ from apscheduler.triggers.cron import CronTrigger
 import discord
 import os
 
+from discord import Webhook
+
 # MY_TOKEN = os.environ.get("DISCORD_TOKEN")
 # NOPE_TOKEN = os.environ.get("NOPE_TOKEN")
 # NOPE_token = "QbU6IKJpgPrwuSkIMX5cdh9GlxDiycfKEBTB5Zz38GNxwJncB9T7o3gk798mNADaOI6D"
@@ -19,11 +21,13 @@ import os
 # nope_channel_id = os.environ.get("NOPE_CHANNEL_ID")
 # nope_channel_id = 823368671954468904
 
-# bnm_token = "OTgzOTMxMjA1OTk5MjkyNDE2.GdIX9X.5VHDX5pWF1MRcZ6I-9I8fmFNWsDiC6zkdxf2Io"
-# bnm_channel_id = 884957071097856010
 
-NOPE_TRADING_TOKEN = os.environ.get("NOPE_TRADING_TOKEN")
-nope_channel_id = os.environ.get("NOPE_TRADING_CHANNEL_ID")
+
+# NOPE_TRADING_TOKEN = os.environ.get("NOPE_TRADING_TOKEN")
+# nope_channel_id = os.environ.get("NOPE_TRADING_CHANNEL_ID")
+
+NOPE_TRADING_TOKEN = "QbU6IKJpgPrwuSkIMX5cdh9GlxDiycfKEBTB5Zz38GNxwJncB9T7o3gk798mNADaOI6D"
+nope_channel_id = 823368671954468904
 
 def draw_graphs():
     ticker = "_SPX"
